@@ -147,39 +147,41 @@ public class DeviceScanActivity extends ListActivity {
 		if(clickCount==1)
 		mBLE.connect(device.getAddress());
 		else{
-			BluetoothGattService gattService = mBLE.mBluetoothGatt.getService(UUID.fromString(SERVICE_UUID_TEST));
-			int type = gattService.getType();
-			Log.e(TAG, "----------------------------------------------------------");
-			Log.e(TAG, "-->service type:" + Utils.getServiceType(type));
-			Log.e(TAG, "-->includedServices size:" + gattService.getIncludedServices().size());
-			Log.e(TAG, "-->service uuid:" + gattService.getUuid());
-			Log.e(TAG, "----------------------------------------------------------");
-
-			final BluetoothGattCharacteristic characteristic = gattService.getCharacteristic(UUID.fromString(UUID_TEST));
-			Log.e(TAG, "char uuid---->" + characteristic.getUuid());
-
-			int permission = characteristic.getPermissions();
-			Log.e(TAG, "char permission---->" + Utils.getCharPermission(permission));
-
-			int property = characteristic.getProperties();
-			Log.e(TAG, "char property---->" + Utils.getCharPropertie(property));
-
-			Log.e(TAG, "char value---->" + byteArrayToString(characteristic.getValue()));
-
-			mHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mBLE.readCharacteristic(characteristic);
-				}
-			}, 500);
-			mBLE.setCharacteristicNotification(characteristic, true);
-			characteristic.setValue("test data"+clickCount);
-			mBLE.writeCharacteristic(characteristic);
+			changeValueTest();
 		}
 	}
 	
 	
-	
+	private void changeValueTest(){
+		BluetoothGattService gattService = mBLE.mBluetoothGatt.getService(UUID.fromString(SERVICE_UUID_TEST));
+		int type = gattService.getType();
+		Log.e(TAG, "----------------------------------------------------------");
+		Log.e(TAG, "-->service type:" + Utils.getServiceType(type));
+		Log.e(TAG, "-->includedServices size:" + gattService.getIncludedServices().size());
+		Log.e(TAG, "-->service uuid:" + gattService.getUuid());
+		Log.e(TAG, "----------------------------------------------------------");
+
+		final BluetoothGattCharacteristic characteristic = gattService.getCharacteristic(UUID.fromString(UUID_TEST));
+		Log.e(TAG, "char uuid---->" + characteristic.getUuid());
+
+		int permission = characteristic.getPermissions();
+		Log.e(TAG, "char permission---->" + Utils.getCharPermission(permission));
+
+		int property = characteristic.getProperties();
+		Log.e(TAG, "char property---->" + Utils.getCharPropertie(property));
+
+		Log.e(TAG, "char value---->" + byteArrayToString(characteristic.getValue()));
+
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mBLE.readCharacteristic(characteristic);
+			}
+		}, 500);
+		mBLE.setCharacteristicNotification(characteristic, true);
+		characteristic.setValue("test data"+clickCount);
+		mBLE.writeCharacteristic(characteristic);
+	}
 
 	private void scanLeDevice(final boolean enable) {
 		if (enable) {
